@@ -2,6 +2,7 @@ import Head from "next/head";
 import styles from "../styles/style.module.scss";
 import Header from "@/components/Header";
 import Menberlist from "@/components/Menberlist";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
@@ -17,6 +18,7 @@ export default function Home() {
       <main className={styles.container}>
         <Menberlist />
       </main>
+      <Footer />
     </>
   );
 }

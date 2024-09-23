@@ -3,7 +3,7 @@ import Header from '@/components/Header'
 import Useredit from '@/components/Useredit'
 import React from 'react'
 
-const user = () => {
+const useredit = () => {
   return (
       <div>
           <Header />
@@ -13,4 +13,4 @@ const user = () => {
   )
 }
 
-export default user
+export default useredit
