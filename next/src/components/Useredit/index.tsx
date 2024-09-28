@@ -1,11 +1,13 @@
 import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react'
 import { useRouter } from 'next/router'
-import { Camera, Loader2 } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 import Button from '@mui/material/Button';
 import apiClient from "@/lib/apiClient"
-import { Input, TextareaAutosize as Textarea, TextareaAutosize } from '@mui/material';
+import { Input, TextareaAutosize } from '@mui/material';
 import { Label } from '@radix-ui/react-label';
 import styles from "./style.module.scss"
+
+// import { Camera, Loader2 } from 'lucide-react'
 
 interface Userdata {
   id: number;
