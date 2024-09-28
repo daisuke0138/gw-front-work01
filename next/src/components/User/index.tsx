@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import styles from "./style.module.scss";
 import apiClient from "@/lib/apiClient";
 import Link from "next/link";
+import { Camera, Loader2 } from 'lucide-react'
+import { Label } from '@radix-ui/react-label';
+import styles from "./style.module.scss";
 
 interface Userdata {
     id: number;
     username: string;
     email: string;
+    password: string;
     number: string;
-    profile_image: string;
+    profile_image: string | null;
     department: string;
     classification: string;
     hoby: string;
@@ -50,36 +53,58 @@ const User: React.FC = () => {
 
     return (
         <div className={styles.container}>
-            <h2 className={styles.heading}>
-                My Profile
-                <Link className={styles.link} href={`/useredit`}>プロフedit</Link>
-                <Link className={styles.link} href={`/doc`}>Document creat</Link>
-            </h2>
-            <table className={styles.table}>
-                <thead>
-                    <tr>
-                        <th>profile</th>
-                        <th>氏名</th>
-                        <th>社員番号</th>
-                        <th>部署</th>
-                        <th>職能</th>
-                        <th>趣味</th>
-                        <th>業務経験</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>写真</td>
-                        <td>{user.username}</td>
-                        <td>{user.number}</td>
-                        <td>{user.department}</td>
-                        <td>{user.classification}</td>
-                        <td>{user.hoby}</td>
-                        <td>{user.business_experience}</td>
-                    </tr>
-                </tbody>
-            </table>
+                <div className={styles.header}>
+                    <h2 className={styles.title}>My Profile</h2>
+                    <Link className={styles.info} href={`/useredit`}>Edit</Link>
+                    <Link className={styles.info} href={`/doc`}>Document creat</Link>
+                </div>
+                <div className={styles.grid}>
+                <div className={styles.imageUpload}>
+                    <Label htmlFor="profile-image">プロフィール画像</Label>
+                    <div className={styles.imagePreview}>
+                    <img
+                        // src={""} 画像のを挿入すること
+
+                        className={styles.previewImage}
+                    />
+                    <Camera className={styles.cameraIcon} />
+                    </div>
+                </div>  
+                    <div>
+                        <Label htmlFor="username">氏名</Label>
+                        <p className={styles.p}>{user.username}
+                        </p>
+                    </div>
+                <div>
+                    <Label htmlFor="number">社員番号</Label>
+                    <p className={styles.p}>{user.number}
+                    </p>
+                </div>
+                    <div>
+                        <Label htmlFor="department">部署</Label>
+                        <p className={styles.p}>{user.department}
+                        </p>
+                    </div>
+
+                    <div>
+                        <Label htmlFor="classification">職能</Label>
+                        <p className={styles.p}>{user.classification}
+                        </p>
+                    </div>
+
+                    <div>
+                        <Label htmlFor="hoby">趣味</Label>
+                        <p className={styles.p}>{user.hoby}
+                        </p>
+                    </div>
+
+                    <div className={styles.fullWidth}>
+                        <Label htmlFor="business_experience">業務経験</Label>
+                        <p className={styles.p}>{user.business_experience}
+                        </p>
+                    </div>
+                </div>
         </div>
-    );
+    )
 };
-export default User;
+export default User
