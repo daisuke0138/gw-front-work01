@@ -64,7 +64,7 @@ const User: React.FC = () => {
                     <div className={styles.imagePreview}>
                     <img
                         // src={""} 画像のを挿入すること
-
+                        // alt={""}
                         className={styles.previewImage}
                     />
                     <Camera className={styles.cameraIcon} />
