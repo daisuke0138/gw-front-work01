@@ -66,7 +66,17 @@ const Menberlist: React.FC = () => {
                 <tbody>
                     {users.map(user => (
                         <tr key={user.id}>
-                            <td>写真</td>
+                            <td>
+                                {user.profile_image ? (
+                                    <img
+                                        src={user.profile_image}
+                                        alt="プロフィール画像"
+                                        className={styles.previewImage}
+                                    />
+                                ) : (
+                                <span className={styles.info}>プロフィール画像がありません</span>
+                                )}
+                            </td>
                             <td>{user.username}</td>
                             <td>{user.number}</td>
                             <td>{user.department}</td>

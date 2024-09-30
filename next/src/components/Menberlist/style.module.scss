@@ -16,6 +16,7 @@
     border: 1px solid #e0e0e0;
     padding: 12px;
     text-align: left;
+    vertical-align: middle;  
 }
 
 .table th {
@@ -23,11 +24,27 @@
     font-weight: bold;
 }
 
-.profileImage {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
+
+.imageUpload {
+    position: relative;
+}
+
+.imagePreview {
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.previewImage {
+    height: 6rem;
+    width: 6rem;
+    border-radius: 9999px;
     object-fit: cover;
+}
+
+.info {
+    color: #4b5563;
+    margin-left: 1rem;
 }
 
 .table a {

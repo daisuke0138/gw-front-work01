@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import apiClient from "@/lib/apiClient";
 import Link from "next/link";
-import { Camera, Loader2 } from 'lucide-react'
+import { Camera } from 'lucide-react'
 import { Label } from '@radix-ui/react-label';
 import styles from "./style.module.scss";
 
@@ -25,15 +25,16 @@ const User: React.FC = () => {
 
     useEffect(() => {
         const fetchUser = async () => {
-                const token = localStorage.getItem('auth_token');
+            const token = localStorage.getItem('auth_token');
                 if (!token) {
                     router.push('/login'); // トークンがない場合はログインページにリダイレクト
                     return;
-                }
+            }
+            console.log('auth_tokeny', localStorage.getItem('auth_token')); 
             try {
                 const response = await apiClient.get('/auth/user', {
                     headers: {
-                        Authorization: `Bearer ${token}`,
+                        Authorization: `Bearer ${localStorage.getItem('auth_token') }`,
                     },
                 });
                 setUser(response.data.user); // レスポンスの構造に合わせて修正
@@ -62,12 +63,16 @@ const User: React.FC = () => {
                 <div className={styles.imageUpload}>
                     <Label htmlFor="profile-image">プロフィール画像</Label>
                     <div className={styles.imagePreview}>
-                    {/* <img
-                        // src={""} 画像のを挿入すること
-                        // alt={""}
-                        className={styles.previewImage}
-                    /> */}
-                    <Camera className={styles.cameraIcon} />
+                        {user.profile_image ? (
+                            <img
+                                src={user.profile_image}
+                                alt="プロフィール画像"
+                                className={styles.previewImage}
+                            />
+                        ) : (
+                                <span className={styles.info}>プロフィール画像がありません</span>
+                        )}
+                        <Camera className={styles.cameraIcon} />
                     </div>
                 </div>  
                     <div>

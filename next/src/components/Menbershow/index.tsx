@@ -64,11 +64,15 @@ const Mebershow: React.FC = () => {
                 <div className={styles.imageUpload}>
                     <Label htmlFor="profile-image">プロフィール画像</Label>
                     <div className={styles.imagePreview}>
-                        {/* <img
-                            // src={""} 画像のを挿入すること
-                            // alt={""}
-                            className={styles.previewImage}
-                        /> */}
+                        {user.profile_image ? (
+                            <img
+                                src={user.profile_image}
+                                alt="プロフィール画像"
+                                className={styles.previewImage}
+                            />
+                        ) : (
+                            <span className={styles.ifno}>プロフィール画像がありません</span>
+                        )}
                         <Camera className={styles.cameraIcon} />
                     </div>
                 </div>
