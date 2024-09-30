@@ -1,54 +1,54 @@
-import React, { useState } from "react";
-import { useRouter } from "next/router";
+// import React, { useState } from "react";
+// import { useRouter } from "next/router";
 import styles from "./style.module.scss";
-import apiClient from "@/lib/apiClient";
-import Link from "next/link";
+// import apiClient from "@/lib/apiClient";
+// import Link from "next/link";
 
-interface Userdata {
-    id: number;
-    profile_image: string;
-    username: string;
-    number: string;
-    department: string;
-    classification: string;
-    hoby: string;
-    business_experience: string;
-}
+// interface Userdata {
+//     id: number;
+//     profile_image: string;
+//     username: string;
+//     number: string;
+//     department: string;
+//     classification: string;
+//     hoby: string;
+//     business_experience: string;
+// }
 
 const Doc: React.FC = () => {
-    const [user, setUser] = useState<Userdata | null>(null);
-    const router = useRouter();
+    // const [user, setUser] = useState<Userdata | null>(null);
+    // const router = useRouter();
 
-    const fetchUsers = async () => {
-        const token = localStorage.getItem('auth_token');
-        if (!token) {
-            router.push('/login'); // トークンがない場合はログイン画面へリダイレクト
-            return;
-        }
-        try {
-            const response = await apiClient.get('/api/user', {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            setUser(response.data);
-        } catch (error) {
-            console.error('Error fetching user data:', error);
-        }
-    };
+    // const fetchUsers = async () => {
+    //     const token = localStorage.getItem('auth_token');
+    //     if (!token) {
+    //         router.push('/login'); // トークンがない場合はログイン画面へリダイレクト
+    //         return;
+    //     }
+    //     try {
+    //         const response = await apiClient.get('/api/user', {
+    //             headers: { Authorization: `Bearer ${token}` },
+    //         });
+    //         setUser(response.data);
+    //     } catch (error) {
+    //         console.error('Error fetching user data:', error);
+    //     }
+    // };
 
 
     return (
         <div className={styles.container}>
             <h2 className={styles.heading}>
                 Document creat
-                <Link className={styles.link} href={`/user`}>戻る</Link>
+                {/* <Link className={styles.link} href={`/user`}>戻る</Link> */}
             </h2>
             <table className={styles.table}>
                 <thead>
                     <tr>
-                        <th>作成者:{user?.username}</th>
+                        {/* <th>作成者:{user?.username}</th>
                         <th>社員番号:{user?.number}</th>
                         <th>部署:{user?.department}</th>
-                        <th>職能:{user?.classification}</th>
+                        <th>職能:{user?.classification}</th> */}
                     </tr>
                 </thead>
             </table>
