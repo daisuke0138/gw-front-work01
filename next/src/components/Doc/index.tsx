@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react'
 import Link from "next/link";
 import { Stage, Layer, Rect, Circle, Line, Text, Label } from 'react-konva'
+import Konva from 'konva';
 import {
     SquareIcon,
     CircleIcon,
@@ -54,7 +55,7 @@ export default function DocumentCreator() {
         };
 
         fetchUserData();
-    }, [router]);
+    }, [router, userData]);
     console.log('user', userData);
 
     // ローカルストレージにドキュメントデータを一時保存
@@ -102,7 +103,7 @@ export default function DocumentCreator() {
     const handleSend = async () => {
         const data = senddocData();
         try {
-            const response = await apiClient.post("/auth/doc", data);
+            await apiClient.post("/auth/doc", data);
             alert('データがdbに保存されました');
         } catch (error) {
             console.error('Error saving data to database:', error);
@@ -136,8 +137,9 @@ export default function DocumentCreator() {
         setSelectedTool(toolName)
     }
 
-    const handleStageClick = (e: any) => {
-        const pos = e.target.getStage().getPointerPosition()
+    const handleStageClick = (e: Konva.KonvaEventObject<MouseEvent>) => { // 型を指定
+        const pos = e.target.getStage()?.getPointerPosition()
+        if (!pos) return;
         let newShape
 
         switch (selectedTool) {
