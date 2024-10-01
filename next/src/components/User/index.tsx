@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import apiClient from "@/lib/apiClient";
 import Link from "next/link";
-import { Camera } from 'lucide-react'
 import { Label } from '@radix-ui/react-label';
 import styles from "./style.module.scss";
 
@@ -72,7 +71,6 @@ const User: React.FC = () => {
                         ) : (
                                 <span className={styles.info}>プロフィール画像がありません</span>
                         )}
-                        <Camera className={styles.cameraIcon} />
                     </div>
                 </div>  
                     <div>

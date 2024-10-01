@@ -135,12 +135,12 @@ const Useredit: React.FC = () => {
           'Content-Type': 'multipart/form-data',
         },
       })
-
+      alert('データを保存しました');
       console.log("User data updated successfully:", response.data)
       router.push("/user")
     } catch (error) {
       console.error("Error updating user data:", error)
-      setError("プロフィールの更新中にエラーが発生しました。もう一度お試しください。")
+      alert('データの保存に失敗しました');
     } 
   }
 
