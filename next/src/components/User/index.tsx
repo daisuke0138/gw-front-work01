@@ -35,8 +35,10 @@ const User: React.FC = () => {
     const [documents, setDocuments] = useState<Document[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedDoc, setSelectedDoc] = useState<Document | null>(null);
+
     const router = useRouter();
 
+    // ユーザー情報とドキュメント情報をapiサーバーより取得
     useEffect(() => {
         const fetchUser = async () => {
             const token = localStorage.getItem('auth_token');
@@ -55,15 +57,11 @@ const User: React.FC = () => {
 
                 // ここでドキュメントも取得します。
                 const docResponse = await apiClient.get('/auth/documents'); 
-                        
-                    // headers: {
-                    //     Authorization: `Bearer ${localStorage.getItem('auth_token')}`,
-                    // },
                 
                 console.log("docResponse.data", docResponse.data);
-                // docResponse.data がオブジェクトである場合の処理
-                const documentData = docResponse.data.docdata;
-                const documentsData: Document[] = [{
+
+                // docResponse.data が配列であることの確認
+                const documentsData: Document[] = docResponse.data.documents.map((documentData: any) => ({
                     id: documentData.id,
                     title: documentData.title,
                     theme: documentData.theme,
@@ -72,7 +70,7 @@ const User: React.FC = () => {
                     results: documentData.results,
                     objects: documentData.objects,
                     userId: documentData.userId,
-                }];
+                }));
 
                 setDocuments(documentsData);
 
@@ -86,7 +84,6 @@ const User: React.FC = () => {
         fetchUser();
     }, [router]);
 
-    console.log(documents);
 
     const handleDocumentSelect = (doc: Document) => {
         setSelectedDoc(doc);
@@ -98,6 +95,12 @@ const User: React.FC = () => {
         setSelectedDoc(null);
     };
 
+    const handleDocumentSend = (doc: Document) => {
+        const encodedDocument = encodeURIComponent(JSON.stringify(doc));
+        router.push(`/doc?document=${encodedDocument}`);
+    };
+
+
     if (!user) {
         return <div>Loading...</div>;
     }
@@ -105,9 +108,8 @@ const User: React.FC = () => {
         return (
             <div className={styles.container}>
                 <div className={styles.header}>
-                    <h2 className={styles.title}>My Profile</h2>
+                    <h2 className={styles.title}>My Page</h2>
                     <Link className={styles.info} href={`/useredit`}>Edit</Link>
-                    <Link className={styles.info} href={`/doc`}>Document creat</Link>
                 </div>
                 <div className={styles.grid}>
                     <div className={styles.imageUpload}>
@@ -181,6 +183,14 @@ const User: React.FC = () => {
                                                 onClick={() => handleDocumentSelect(doc)}
                                             >
                                                 詳細表示
+                                                
+                                            </button>
+                                            <button
+                                                className={styles.detailButton}
+                                                onClick={() => handleDocumentSend(doc)}
+                                            >
+                                                編集
+
                                             </button>
                                         </td>
                                     </tr>

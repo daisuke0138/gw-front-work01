@@ -8,7 +8,7 @@ const Header = () => {
             <ul>
                 <h1>Knowledge sharing room</h1>
                 <Link href={"/"}>Menber List</Link>
-                <Link href={"/user"}>My Profile</Link>
+                <Link href={"/user"}>My Page</Link>
                 <Link href={"/doc"}>Document creat</Link>
             </ul>
             <ul>
