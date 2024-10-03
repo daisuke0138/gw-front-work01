@@ -26,7 +26,12 @@ export default function DocumentCreator() {
     const [overview, setoverview] = useState('')
     const [results, setresults] = useState('')
     const [selectedTool, setSelectedTool] = useState('')
-    const [shapes, setShapes] = useState<any[]>([])
+    type Shape = 
+      | { type: 'Rect'; x: number; y: number; width: number; height: number; fill: string }
+      | { type: 'Circle'; x: number; y: number; radius: number; fill: string }
+      | { type: 'Line'; points: number[]; stroke: string; strokeWidth: number };
+    
+    const [shapes, setShapes] = useState<Shape[]>([])
     const [stageSize, setStageSize] = useState({ width: 0, height: 500 })
     const router = useRouter();
 
