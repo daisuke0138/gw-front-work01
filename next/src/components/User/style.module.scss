@@ -114,6 +114,12 @@
     display: none;
 }
 
+.Label {
+    color: #4b5563;
+    margin-bottom: 0.5rem;
+    font-size: 2rem;
+}
+
 .p,
 .textarea {
     width: 100%;
@@ -121,6 +127,7 @@
     padding: 0.25rem;
     border: 1px solid #d1d5db;
     border-radius: 0.25rem;
+    font-size: 1.5rem;
 }
 
 .fullWidth {
@@ -134,4 +141,99 @@
     height: 100vh;
     font-size: 1.5rem;
     color: #4b5563;
+}
+
+.input {
+    margin-top: 1rem;
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.25rem;
+    width: 20%;
+    font-size: 1.2rem;
+}
+
+// New styles for document section and modal
+
+.documentSection {
+    margin-top: 2rem;
+}
+
+.subtitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 1rem;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.tableHeader {
+    background-color: #b4cbf8;
+    color: #1f2937;
+    font-weight: 600;
+    text-align: left;
+    padding: 0.75rem;
+    border-bottom: 2px solid #d1d5db;
+}
+
+.table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.detailButton {
+    background-color: #3b82f6;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    border: none;
+    cursor: pointer;
+    font-size: 0.875rem;
+
+    &:hover {
+        background-color: #2563eb;
+    }
+}
+
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modalContent {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    width: 80%;
+    max-width: 800px;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.closeButton {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #4b5563;
+
+    &:hover {
+        color: #1f2937;
+    }
 }

@@ -24,6 +24,7 @@
 .info {
   color: #4b5563;
   margin-left: 1rem;
+  font-size: 1.5rem;
 }
 
 .submitButton {
@@ -113,12 +114,14 @@
   display: none;
 }
 
-.input, .textarea {
+.input,
+.textarea {
   width: 100%;
   margin-top: 0.5rem;
   padding: 0.25rem;
   border: 1px solid #d1d5db;
   border-radius: 0.25rem;
+  font-size: 1.2rem;
 }
 
 .fullWidth {

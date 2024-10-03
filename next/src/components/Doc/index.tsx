@@ -2,7 +2,7 @@ import apiClient from "@/lib/apiClient";
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react'
 import Link from "next/link";
-import { Stage, Layer, Rect, Circle, Line, Text, Label } from 'react-konva'
+import { Stage, Layer, Rect, Circle, Line, Label } from 'react-konva'
 import Konva from 'konva';
 import {
     SquareIcon,
@@ -18,7 +18,7 @@ import {
     Send
 } from 'lucide-react'
 import styles from "./style.module.scss";
-
+// import { Stage, Layer, Rect, Circle, Line, Text, Label } from 'react-konva'
 
 export default function DocumentCreator() {
     const [title, setTitle] = useState('')
