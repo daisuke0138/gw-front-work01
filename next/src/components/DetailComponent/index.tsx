@@ -2,6 +2,8 @@ import React from 'react';
 import { Stage, Layer, Rect, Circle, Line } from 'react-konva';
 import { Label } from '@radix-ui/react-label';
 import styles from "./style.module.scss";
+import { shapes } from 'konva/lib/Shape';
+import router from 'next/router';
 // import Link from 'next/link';
 // import { useRouter } from 'next/router';
 
@@ -35,18 +37,18 @@ interface Shape {
 interface DetailComponentProps {
     document: Document | null;
     onClose: () => void;
-    isEditMode: boolean;
+    // isEditMode: boolean;
 }
 
 
-const DetailComponent: React.FC<DetailComponentProps> = ({ document, onClose, isEditMode }) => {
+const DetailComponent: React.FC<DetailComponentProps> = ({ document, onClose}) => {
     // const router = useRouter();
     if (!document) {
         return null;
     }
-
-    const objects = JSON.parse(document.objects);
-    const [shapes, setShapes] = useState<Shape[]>([]);
+    const decodedDocument = JSON.parse(decodeURIComponent(router.query.document as string));
+    // const objects = JSON.parse(document.objects);
+    // const [shapes, setShapes] = useState<Shape[]>([]);
 
     return (
         <div className={styles.modalOverlay}>
@@ -135,7 +137,3 @@ const DetailComponent: React.FC<DetailComponentProps> = ({ document, onClose, is
 };
 
 export default DetailComponent;
-
-function useState<T>(arg0: never[]): [any, any] {
-    throw new Error('Function not implemented.');
-}
