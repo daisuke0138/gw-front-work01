@@ -21,16 +21,16 @@ import styles from "./style.module.scss";
 // import { Stage, Layer, Rect, Circle, Line, Text, Label } from 'react-konva'
 
 // detailconponent.tsxからデータを取得。
-interface Document {
-    id: string;
-    title: string;
-    theme: string;
-    updatedAt: string;
-    overview: string;
-    results: string;
-    objects: string;
-    userId: string;
-}
+// interface Document {
+//     id: string;
+//     title: string;
+//     theme: string;
+//     updatedAt: string;
+//     overview: string;
+//     results: string;
+//     objects: string;
+//     userId: string;
+// }
 
 // ドキュメントデータの型定義。初回作成時には空のデータを格納。
 type Shape = {

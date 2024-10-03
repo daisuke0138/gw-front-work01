@@ -2,10 +2,10 @@ import React from 'react';
 import { Stage, Layer, Rect, Circle, Line } from 'react-konva';
 import { Label } from '@radix-ui/react-label';
 import styles from "./style.module.scss";
-import Link from 'next/link';
+// import Link from 'next/link';
 // import { useRouter } from 'next/router';
 
-
+// Document インターフェースの定義
 interface Document {
     id: string;
     title: string;
@@ -16,15 +16,37 @@ interface Document {
     objects: string;
 }
 
-interface DetailComponentProps {
-    document: Document;
-    onClose: () => void;
+// Shape インターフェースの定義
+interface Shape {
+    type: 'Rect' | 'Circle' | 'Line';
+    x: number;
+    y: number;
+    width?: number;
+    height?: number;
+    radius?: number;
+    fill: string;
+    points?: number[];
+    stroke?: string;
+    strokeWidth?: number;
 }
 
-const DetailComponent: React.FC<DetailComponentProps> = ({ document, onClose }) => {
-    // const router = useRouter();
-    const objects = JSON.parse(document.objects);
 
+// DetailComponentProps インターフェースの定義
+interface DetailComponentProps {
+    document: Document | null;
+    onClose: () => void;
+    isEditMode: boolean;
+}
+
+
+const DetailComponent: React.FC<DetailComponentProps> = ({ document, onClose, isEditMode }) => {
+    // const router = useRouter();
+    if (!document) {
+        return null;
+    }
+
+    const objects = JSON.parse(document.objects);
+    const [shapes, setShapes] = useState<Shape[]>([]);
 
     return (
         <div className={styles.modalOverlay}>
@@ -63,45 +85,45 @@ const DetailComponent: React.FC<DetailComponentProps> = ({ document, onClose }) 
                             <div id="canvas" className={styles.canvasContainer}>
                                 <Stage width={800} height={600}>
                                     <Layer>
-                                        {objects.map((obj: any, index: number) => {
-                                            switch (obj.type) {
-                                                case 'Rect':
-                                                    return (
-                                                        <Rect
-                                                            key={index}
-                                                            x={obj.x}
-                                                            y={obj.y}
-                                                            width={obj.width}
-                                                            height={obj.height}
-                                                            fill={obj.fill}
-                                                            draggable={false} // 編集不可
-                                                        />
-                                                    );
-                                                case 'Circle':
-                                                    return (
-                                                        <Circle
-                                                            key={index}
-                                                            x={obj.x}
-                                                            y={obj.y}
-                                                            radius={obj.radius}
-                                                            fill={obj.fill}
-                                                            draggable={false} // 編集不可
-                                                        />
-                                                    );
-                                                case 'Line':
-                                                    return (
-                                                        <Line
-                                                            key={index}
-                                                            points={obj.points}
-                                                            stroke={obj.stroke}
-                                                            strokeWidth={obj.strokeWidth}
-                                                            draggable={false} // 編集不可
-                                                        />
-                                                    );
-                                                default:
-                                                    return null;
-                                            }
-                                        })}
+                                    {shapes.map((obj: Shape, index: number) => {
+                                        switch (obj.type) {
+                                            case 'Rect':
+                                                return (
+                                                    <Rect
+                                                        key={index}
+                                                        x={obj.x}
+                                                        y={obj.y}
+                                                        width={obj.width}
+                                                        height={obj.height}
+                                                        fill={obj.fill}
+                                                        draggable={false} // 編集不可
+                                                    />
+                                                );
+                                            case 'Circle':
+                                                return (
+                                                    <Circle
+                                                        key={index}
+                                                        x={obj.x}
+                                                        y={obj.y}
+                                                        radius={obj.radius}
+                                                        fill={obj.fill}
+                                                        draggable={false} // 編集不可
+                                                    />
+                                                );
+                                            case 'Line':
+                                                return (
+                                                    <Line
+                                                        key={index}
+                                                        points={obj.points}
+                                                        stroke={obj.stroke}
+                                                        strokeWidth={obj.strokeWidth}
+                                                        draggable={false} // 編集不可
+                                                    />
+                                                );
+                                            default:
+                                                return null;
+                                        }
+                                    })}
                                     </Layer>
                                 </Stage>
                             </div>
@@ -113,3 +135,7 @@ const DetailComponent: React.FC<DetailComponentProps> = ({ document, onClose }) 
 };
 
 export default DetailComponent;
+
+function useState<T>(arg0: never[]): [any, any] {
+    throw new Error('Function not implemented.');
+}
