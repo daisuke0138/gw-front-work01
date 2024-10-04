@@ -1,0 +1,117 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    padding: 1rem;
+}
+
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    background-color: #f3f4f6;
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
+}
+
+.toolButtons {
+    display: flex;
+    gap: 0.5rem;
+    flex-grow: 1;
+}
+
+.actionButtons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.toolButton,
+.actionButton {
+    padding: 0.5rem;
+    background-color: white;
+    border: 1px solid #d1d5db;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+        background-color: #e5e7eb;
+    }
+
+    &.selected {
+        background-color: #3b82f6;
+        color: white;
+    }
+}
+
+.actionButton {
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+
+    &:hover {
+        background-color: #2563eb;
+    }
+}
+
+.info {
+    color: #4b5563;
+    margin-right: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.icon {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    flex-grow: 1;
+}
+
+.formGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.input {
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.25rem;
+    width: 100%;
+    font-size: 1.2rem;
+
+    &.readonly {
+        background-color: #f3f4f6;
+    }
+}
+
+.textarea {
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.25rem;
+    width: 100%;
+    resize: vertical;
+    font-size: 1.2rem;
+}
+
+.canvasContainer {
+    height: 67vh;
+    border: 1px solid #d1d5db;
+    border-radius: 0.25rem;
+    overflow: hidden;
+}
+
+.username{
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}

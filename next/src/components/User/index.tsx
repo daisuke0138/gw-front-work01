@@ -95,12 +95,6 @@ const User: React.FC = () => {
         setSelectedDoc(null);
     };
 
-    const handleDocumentSend = (doc: Document) => {
-        const encodedDocument = encodeURIComponent(JSON.stringify(doc));
-        router.push(`/doc?document=${encodedDocument}`);
-    };
-
-
     if (!user) {
         return <div>Loading...</div>;
     }
@@ -187,7 +181,7 @@ const User: React.FC = () => {
                                             </button>
                                             <button
                                                 className={styles.detailButton}
-                                                onClick={() => handleDocumentSend(doc)}
+                                                onClick={() => router.push(`/docedit?document=${doc.id}`)}
                                             >
                                                 編集
 

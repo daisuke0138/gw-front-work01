@@ -1,11 +1,8 @@
 import React from 'react';
-import { Stage, Layer, Rect, Circle, Line } from 'react-konva';
+import dynamic from 'next/dynamic';
 import { Label } from '@radix-ui/react-label';
 import styles from "./style.module.scss";
-import { shapes } from 'konva/lib/Shape';
-import router from 'next/router';
-// import Link from 'next/link';
-// import { useRouter } from 'next/router';
+import { useState, useEffect } from 'react';
 
 // Document インターフェースの定義
 interface Document {
@@ -32,23 +29,32 @@ interface Shape {
     strokeWidth?: number;
 }
 
-
 // DetailComponentProps インターフェースの定義
 interface DetailComponentProps {
     document: Document | null;
     onClose: () => void;
-    // isEditMode: boolean;
 }
 
+// `react-konva` を動的にインポートし、SSR を無効にする
+const Stage = dynamic(() => import('react-konva').then(mod => mod.Stage), { ssr: false });
+const Layer = dynamic(() => import('react-konva').then(mod => mod.Layer), { ssr: false });
+const Rect = dynamic(() => import('react-konva').then(mod => mod.Rect), { ssr: false });
+const Circle = dynamic(() => import('react-konva').then(mod => mod.Circle), { ssr: false });
+const Line = dynamic(() => import('react-konva').then(mod => mod.Line), { ssr: false });
 
-const DetailComponent: React.FC<DetailComponentProps> = ({ document, onClose}) => {
-    // const router = useRouter();
+const DetailComponent: React.FC<DetailComponentProps> = ({ document, onClose }) => {
+    const [shapes, setShapes] = useState<Shape[]>([]);
+
+    useEffect(() => {
+        if (document) {
+            const objects = JSON.parse(document.objects);
+            setShapes(objects);
+        }
+    }, [document]);
+
     if (!document) {
         return null;
     }
-    const decodedDocument = JSON.parse(decodeURIComponent(router.query.document as string));
-    // const objects = JSON.parse(document.objects);
-    // const [shapes, setShapes] = useState<Shape[]>([]);
 
     return (
         <div className={styles.modalOverlay}>
@@ -82,11 +88,11 @@ const DetailComponent: React.FC<DetailComponentProps> = ({ document, onClose}) =
                         <p id="results" className={styles.content}>{document.results}</p>
                     </div>
 
-                        <div className={styles.detailItem}>
-                            <label htmlFor="canvas" className={styles.label}>報告内容</label>
-                            <div id="canvas" className={styles.canvasContainer}>
-                                <Stage width={800} height={600}>
-                                    <Layer>
+                    <div className={styles.detailItem}>
+                        <label htmlFor="canvas" className={styles.label}>報告内容</label>
+                        <div id="canvas" className={styles.canvasContainer}>
+                            <Stage width={800} height={600}>
+                                <Layer>
                                     {shapes.map((obj: Shape, index: number) => {
                                         switch (obj.type) {
                                             case 'Rect':
@@ -126,13 +132,13 @@ const DetailComponent: React.FC<DetailComponentProps> = ({ document, onClose}) =
                                                 return null;
                                         }
                                     })}
-                                    </Layer>
-                                </Stage>
-                            </div>
+                                </Layer>
+                            </Stage>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
     );
 };
 

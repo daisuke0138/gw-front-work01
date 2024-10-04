@@ -34,6 +34,16 @@ type Shape = {
     strokeWidth?: number;
 };
 
+interface Document {
+    id: string;
+    title: string;
+    theme: string;
+    overview: string;
+    results: string;
+    updatedAt: string;
+    objects: string;
+}
+
 // `react-konva` を動的にインポートし、SSR を無効にする
 const Stage = dynamic(() => import('react-konva').then(mod => mod.Stage), { ssr: false });
 const Layer = dynamic(() => import('react-konva').then(mod => mod.Layer), { ssr: false });
@@ -41,7 +51,7 @@ const Rect = dynamic(() => import('react-konva').then(mod => mod.Rect), { ssr: f
 const Circle = dynamic(() => import('react-konva').then(mod => mod.Circle), { ssr: false });
 const Line = dynamic(() => import('react-konva').then(mod => mod.Line), { ssr: false });
 
-const Doc: React.FC = () => {
+const Docedit: React.FC = () => {
     const [title, setTitle] = useState('');
     const [theme, setTheme] = useState('');
     const [overview, setOverview] = useState('');
@@ -79,6 +89,41 @@ const Doc: React.FC = () => {
 
     console.log('userdata', userData);
 
+    // 編集選択されたドキュメントデータを取得
+    useEffect(() => {
+
+        const fetchDocument = async () => {
+            const { document: id } = router.query;
+
+            if (!router.isReady || !id) {
+            
+            return; // ルーターが準備できていない場合は何もしない
+            };
+        
+
+            const apiUrl = `/auth/document/${id}`;
+
+            try {
+                const response = await apiClient.get(apiUrl, {
+                    // headers: {
+                    //     Authorization: `Bearer ${localStorage.getItem('auth_token')}`,
+                    // },
+                });
+                console.log('document data:', response.data); // ここでレスポンスデータをコンソールに表示
+                const document = response.data.document;
+                setTitle(document.title);
+                setTheme(document.theme);
+                setOverview(document.overview);
+                setResults(document.results);
+                setShapes(JSON.parse(document.objects));
+            } catch (error: unknown) {
+                console.error('Failed to fetch document:', error);
+            }
+        };
+
+        fetchDocument();
+    }, [router.isReady, router.query]);
+
     // ローカルストレージにドキュメントデータを一時保存
     const handleSave = () => {
         const data = {
@@ -111,7 +156,9 @@ const Doc: React.FC = () => {
 
     // APIサーバーに送信するデータを格納
     const senddocData = () => {
+        const { document: id } = router.query;
         return {
+            documentId: id,
             title,
             theme,
             overview,
@@ -124,8 +171,15 @@ const Doc: React.FC = () => {
     const handleSend = async () => {
         const data = senddocData();
         try {
-            await apiClient.post("/auth/doc", data);
+            await apiClient.post("/auth/docupdata", data);
             alert('データがdbに保存されました');
+
+            // ローカルストレージのデータを削除
+            localStorage.removeItem('documentData');
+
+            // 画面遷移
+            router.push('/user');
+
         } catch (error) {
             console.error('Error saving data to database:', error);
             alert('データの保存に失敗しました');
@@ -292,4 +346,4 @@ const Doc: React.FC = () => {
     );
 };
 
-export default Doc;
+export default Docedit;
