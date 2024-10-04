@@ -61,7 +61,7 @@ const User: React.FC = () => {
                 console.log("docResponse.data", docResponse.data);
 
                 // docResponse.data が配列であることの確認
-                const documentsData: Document[] = docResponse.data.documents.map((documentData: any) => ({
+                const documentsData: Document[] = docResponse.data.documents.map((documentData: Document) => ({
                     id: documentData.id,
                     title: documentData.title,
                     theme: documentData.theme,
