@@ -34,15 +34,15 @@ type Shape = {
     strokeWidth?: number;
 };
 
-interface Document {
-    id: string;
-    title: string;
-    theme: string;
-    overview: string;
-    results: string;
-    updatedAt: string;
-    objects: string;
-}
+// interface Document {
+//     id: string;
+//     title: string;
+//     theme: string;
+//     overview: string;
+//     results: string;
+//     updatedAt: string;
+//     objects: string;
+// }
 
 // `react-konva` を動的にインポートし、SSR を無効にする
 const Stage = dynamic(() => import('react-konva').then(mod => mod.Stage), { ssr: false });
