@@ -103,7 +103,7 @@ const User: React.FC = () => {
             <div className={styles.container}>
                 <div className={styles.header}>
                     <h2 className={styles.title}>My Page</h2>
-                    <Link className={styles.info} href={`/useredit`}>Edit</Link>
+                    <Link className={styles.info} href={`/useredit`}>Prof Edit</Link>
                 </div>
                 <div className={styles.grid}>
                     <div className={styles.imageUpload}>
@@ -160,7 +160,7 @@ const User: React.FC = () => {
                             <tr>
                                 <th className={styles.tableHeader}>タイトル</th>
                                 <th className={styles.tableHeader}>テーマ</th>
-                                <th className={styles.tableHeader}>日付</th>
+                                <th className={styles.tableHeader}>作成/更新日</th>
                                 <th className={styles.tableHeader}>ドキュメント</th>
                             </tr>
                         </thead>

@@ -60,7 +60,7 @@ const Menberlist: React.FC = () => {
                         <th>職能</th>
                         <th>趣味</th>
                         <th>業務経験</th>
-                        <th>個人ページ</th>
+                        <th>詳細ページ</th>
                     </tr>
                 </thead>
                 <tbody>

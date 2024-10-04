@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import apiClient from "@/lib/apiClient";
-import { Camera } from 'lucide-react'
 import { Label } from '@radix-ui/react-label';
 import styles from "./style.module.scss";
+import DetailComponent from "../DetailComponent";
+import Link from "next/link";
 
 
 interface Userdata {
@@ -18,9 +19,23 @@ interface Userdata {
     business_experience: string;
 }
 
+interface Document {
+    id: string;
+    title: string;
+    theme: string;
+    overview: string;
+    results: string;
+    updatedAt: string;
+    objects: string;
+    userId: number
+}
+
 const Mebershow: React.FC = () => {
     const [user, setUser] = useState<Userdata | null>(null);
     const router = useRouter();
+    const [documents, setDocuments] = useState<Document[]>([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedDoc, setSelectedDoc] = useState<Document | null>(null);
     const { id } = router.query;
 
     useEffect(() => {
@@ -41,8 +56,29 @@ const Mebershow: React.FC = () => {
                         Authorization: `Bearer ${localStorage.getItem('auth_token')}`,
                     },
                 });
-                console.log('Response data:', response.data); // ここでレスポンスデータをコンソールに表示
+                console.log('Response userdata:', response.data); // ここでレスポンスデータをコンソールに表示
                 setUser(response.data.user);
+
+                // ここでドキュメントも取得します。
+                const apidocUrl = `/auth/menberdocument/${id}`;
+                const docResponse = await apiClient.get(apidocUrl);
+                setDocuments(docResponse.data);
+                console.log("docResponse.data", docResponse.data);
+
+                // docResponse.data が配列であることの確認
+                const documentsData: Document[] = docResponse.data.documents.map((documentData: Document) => ({
+                    id: documentData.id,
+                    title: documentData.title,
+                    theme: documentData.theme,
+                    updatedAt: documentData.updatedAt,
+                    overview: documentData.overview,
+                    results: documentData.results,
+                    objects: documentData.objects,
+                    userId: documentData.userId,
+                }));
+
+                setDocuments(documentsData);
+
             } catch (error: unknown) {
                 console.error('Failed to fetch user:', error);
             }
@@ -50,6 +86,16 @@ const Mebershow: React.FC = () => {
 
         fetchUser();
     }, [id, router.isReady, router.query]);
+
+    const handleDocumentSelect = (doc: Document) => {
+        setSelectedDoc(doc);
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        setSelectedDoc(null);
+    };
 
     if (!user) {
         return <div>Loading...</div>;
@@ -59,6 +105,7 @@ const Mebershow: React.FC = () => {
         <div className={styles.container}>
             <div className={styles.header}>
                 <h2 className={styles.title}>Menber Profile</h2>
+                <Link className={styles.info} href={`/`}>to Menber list</Link>
             </div>
             <div className={styles.grid}>
                 <div className={styles.imageUpload}>
@@ -73,7 +120,6 @@ const Mebershow: React.FC = () => {
                         ) : (
                             <span className={styles.ifno}>プロフィール画像がありません</span>
                         )}
-                        <Camera className={styles.cameraIcon} />
                     </div>
                 </div>
                 <div>
@@ -110,6 +156,55 @@ const Mebershow: React.FC = () => {
                     </p>
                 </div>
             </div>
+            <div className={styles.documentSection}>
+                <h2 className={styles.subtitle}>Knowledge</h2>
+                <table className={styles.table}>
+                    <thead>
+                        <tr>
+                            <th className={styles.tableHeader}>タイトル</th>
+                            <th className={styles.tableHeader}>テーマ</th>
+                            <th className={styles.tableHeader}>作成/更新日</th>
+                            <th className={styles.tableHeader}>ドキュメント</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {documents && documents.length > 0 ? ( // documents が存在するか確認
+                            documents.map((doc) => (
+                                <tr key={doc.id}>
+                                    <td>{doc.title}</td>
+                                    <td>{doc.theme}</td>
+                                    <td>{new Date(doc.updatedAt).toLocaleDateString()}</td>
+                                    <td>
+                                        <button
+                                            className={styles.detailButton}
+                                            onClick={() => handleDocumentSelect(doc)}
+                                        >
+                                            詳細表示
+
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan={4}>ドキュメントがありません</td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
+
+            {isModalOpen && selectedDoc && (
+                <div className={styles.modalOverlay} onClick={handleCloseModal}>
+                    <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+                        <button className={styles.closeButton} onClick={handleCloseModal}>×</button>
+                        <DetailComponent
+                            document={selectedDoc}
+                            onClose={() => setIsModalOpen(false)}
+                        />
+                    </div>
+                </div>
+            )}
         </div>
     )
 };

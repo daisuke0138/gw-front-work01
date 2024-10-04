@@ -126,6 +126,13 @@ const Doc: React.FC = () => {
         try {
             await apiClient.post("/auth/doc", data);
             alert('データがdbに保存されました');
+            
+            // ローカルストレージのデータを削除
+            localStorage.removeItem('documentData');
+
+            // 画面遷移
+            router.push('/user');
+
         } catch (error) {
             console.error('Error saving data to database:', error);
             alert('データの保存に失敗しました');
