@@ -51,7 +51,7 @@ const Header = () => {
         <header className={styles.header}>
             <ul>
                 <h1>Knowledge sharing room</h1>
-                <h1 className={styles.p}>welcom {user ? user.username + "さん" : 'Guest'}</h1>
+                <h1 className={styles.p}>welcome {user ? user.username + "さん" : 'Guest'}</h1>
                 <Link href={"/"}>Menber List</Link>
                 <Link href={"/user"}>My Page</Link>
                 <Link href={"/doc"}>Document creat</Link>
