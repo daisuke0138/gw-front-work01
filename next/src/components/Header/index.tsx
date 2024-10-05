@@ -23,17 +23,17 @@ const Header = () => {
 
     useEffect(() => {
         const fetchUser = async () => {
-            // const token = localStorage.getItem('auth_token');
-            // if (!token) {
-            //     router.push('/login'); // トークンがない場合はログインページにリダイレクト
-            //     return;
-            // }
-            // console.log('auth_tokeny', localStorage.getItem('auth_token'));
+            const token = localStorage.getItem('auth_token');
+            if (!token) {
+                console.log('No auth token found, stopping request.');
+                return; // トークンがない場合はリクエストを停止
+            }
+
             try {
                 const response = await apiClient.get('/auth/user', {
-                    // headers: {
-                    //     Authorization: `Bearer ${localStorage.getItem('auth_token')}`,
-                    // },
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
                 });
                 setUser(response.data.user); // レスポンスの構造に合わせて修正
 
