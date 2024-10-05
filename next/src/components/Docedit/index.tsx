@@ -418,7 +418,8 @@ const Docedit: React.FC = () => {
                 <div id="canvas-container" className={styles.canvasContainer}>
                     <Stage width={stageSize.width} height={stageSize.height} onClick={handleStageClick}>
                         <Layer>
-                            {shapes.map((shape, i) => {
+                            {shapes.map((shape) => {
+                            // {shapes.map((shape, i) => {
                                 switch (shape.type) {
                                     case 'Rect':
                                         return (
