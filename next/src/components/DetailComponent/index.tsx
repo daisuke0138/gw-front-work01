@@ -1,8 +1,7 @@
-import React from 'react';
-import dynamic from 'next/dynamic';
-import { Label } from '@radix-ui/react-label';
-import styles from "./style.module.scss";
 import { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
+import styles from "./style.module.scss";
+import { Label } from "@radix-ui/react-label";
 
 // Document インターフェースの定義
 interface Document {
@@ -17,16 +16,20 @@ interface Document {
 
 // Shape インターフェースの定義
 interface Shape {
-    type: 'Rect' | 'Circle' | 'Line';
+    id: string;
+    type: string;
     x: number;
     y: number;
     width?: number;
     height?: number;
+    fill?: string;
     radius?: number;
-    fill: string;
     points?: number[];
     stroke?: string;
     strokeWidth?: number;
+    rotation?: number;
+    text?: string;
+    fontSize?: number;
 }
 
 // DetailComponentProps インターフェースの定義
@@ -41,6 +44,7 @@ const Layer = dynamic(() => import('react-konva').then(mod => mod.Layer), { ssr:
 const Rect = dynamic(() => import('react-konva').then(mod => mod.Rect), { ssr: false });
 const Circle = dynamic(() => import('react-konva').then(mod => mod.Circle), { ssr: false });
 const Line = dynamic(() => import('react-konva').then(mod => mod.Line), { ssr: false });
+const Text = dynamic(() => import('react-konva').then(mod => mod.Text), { ssr: false });
 
 const DetailComponent: React.FC<DetailComponentProps> = ({ document, onClose }) => {
     const [shapes, setShapes] = useState<Shape[]>([]);
@@ -121,6 +125,16 @@ const DetailComponent: React.FC<DetailComponentProps> = ({ document, onClose }) 
                                             case 'Line':
                                                 return (
                                                     <Line
+                                                        key={index}
+                                                        points={obj.points}
+                                                        stroke={obj.stroke}
+                                                        strokeWidth={obj.strokeWidth}
+                                                        draggable={false} // 編集不可
+                                                    />
+                                                );
+                                            case 'Text':
+                                                return (
+                                                    <Text
                                                         key={index}
                                                         points={obj.points}
                                                         stroke={obj.stroke}

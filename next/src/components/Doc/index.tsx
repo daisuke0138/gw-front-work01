@@ -34,6 +34,8 @@ interface Shape {
     stroke?: string;
     strokeWidth?: number;
     rotation?: number;
+    text?: string;
+    fontSize?: number;
 }
 
 // `react-konva` を動的にインポートし、SSR を無効にする
@@ -42,6 +44,7 @@ const Layer = dynamic(() => import('react-konva').then(mod => mod.Layer), { ssr:
 const Rect = dynamic(() => import('react-konva').then(mod => mod.Rect), { ssr: false });
 const Circle = dynamic(() => import('react-konva').then(mod => mod.Circle), { ssr: false });
 const Line = dynamic(() => import('react-konva').then(mod => mod.Line), { ssr: false });
+const Text = dynamic(() => import('react-konva').then(mod => mod.Text), { ssr: false });
 
 const Doc: React.FC = () => {
     const [title, setTitle] = useState('');
@@ -53,6 +56,8 @@ const Doc: React.FC = () => {
     const [stageSize, setStageSize] = useState({ width: 0, height: 500 });
     const router = useRouter();
     const [selectedShapeId, setSelectedShapeId] = useState<string | null>(null);
+    const [editingTextId, setEditingTextId] = useState<string | null>(null);
+    const [editingText, setEditingText] = useState<string>('');
 
     // userデータを取得 
     const [userData, setUserData] = useState({ id: '', username: '' });
@@ -167,55 +172,115 @@ const Doc: React.FC = () => {
     // オブジェクトの定義
     const handleToolSelect = (toolName: string) => {
         setSelectedTool(toolName);
+        if (toolName === 'eraser') {
+            setSelectedShapeId(null);
+        }
     };
 
+    const handleShapeClick = (id: string, type: string, text: string) => {
+        if (selectedTool === 'eraser') {
+            setShapes(shapes.filter(shape => shape.id !== id));
+        } else if (type === 'Text') {
+            setEditingTextId(id);
+            setEditingText(text);
+        } else {
+            setSelectedShapeId(id);
+        }
+    };
+
+    // const handleTextClick = (id: string, text: string) => {
+    //     if (selectedTool === 'eraser') {
+    //         setShapes(shapes.filter(shape => shape.id !== id));
+    //     } else {
+    //         setEditingTextId(id);
+    //         setEditingText(text);
+    //     }
+    // };
+
+    const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setEditingText(e.target.value);
+    };
+
+    const handleTextSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter' && editingTextId) {
+            const newShapes = shapes.map((shape) => {
+                if (shape.id === editingTextId) {
+                    return {
+                        ...shape,
+                        text: editingText,
+                    };
+                }
+                return shape;
+            });
+            setShapes(newShapes);
+            setEditingTextId(null);
+            setEditingText('');
+        }
+    };
     // ツールボタンがクリックされたときに、選択されたツールの名前を selectedTool ステートに設定。
     // キャンバス上でクリックした位置に図形を挿入するための関数。
-    const handleStageClick = (e: Konva.KonvaEventObject<MouseEvent>) => { // 型を指定
-            // クリックした位置を取得
-            const pos = e.target.getStage()?.getPointerPosition();
-            if (!pos) return;
-            let newShape: Shape;
-            //各図形の初期形状を定義 
-            // id:は図形の識別子、配置図数が増えるとid+1される
-            switch (selectedTool) {
-                case 'square':
-                    newShape = {
-                        id: `rect-${shapes.length + 1}`,
-                        type: 'Rect',
-                        x: pos.x,
-                        y: pos.y,
-                        width: 50,
-                        height: 50,
-                        fill: 'red',
-                    };
-                    break;
-                case 'circle':
-                    newShape = {
-                        id: `Circle-${shapes.length + 1}`,
-                        type: 'Circle',
-                        x: pos.x,
-                        y: pos.y,
-                        radius: 25,
-                        fill: 'blue',
-                    };
-                    break;
-                case 'line':
-                    newShape = {
-                        id: `Line-${shapes.length + 1}`,
-                        type: 'Line',
-                        x: pos.x,
-                        y: pos.y,
-                        points: [pos.x, pos.y, pos.x + 50, pos.y + 50],
-                        stroke: 'green',
-                        strokeWidth: 2,
-                    };
-                    break;
-                default:
-                    return;
-            }
-            setShapes([...shapes, newShape]);
-        };
+    const handleStageClick = (e: Konva.KonvaEventObject<MouseEvent>) => {
+        if (editingTextId) {
+            // 編集中のテキストがある場合は新規追加を行わない
+            return;
+        }
+
+        // クリックした位置を取得
+        const pos = e.target.getStage()?.getPointerPosition();
+        if (!pos) return;
+        let newShape: Shape;
+        // 各図形の初期形状を定義
+        // id:は図形の識別子、配置図数が増えるとid+1される
+        switch (selectedTool) {
+            case 'square':
+                newShape = {
+                    id: `rect-${shapes.length + 1}`,
+                    type: 'Rect',
+                    x: pos.x,
+                    y: pos.y,
+                    width: 50,
+                    height: 50,
+                    fill: 'red',
+                };
+                break;
+            case 'circle':
+                newShape = {
+                    id: `Circle-${shapes.length + 1}`,
+                    type: 'Circle',
+                    x: pos.x,
+                    y: pos.y,
+                    radius: 25,
+                    fill: 'blue',
+                };
+                break;
+            case 'line':
+                newShape = {
+                    id: `Line-${shapes.length + 1}`,
+                    type: 'Line',
+                    x: pos.x,
+                    y: pos.y,
+                    points: [pos.x, pos.y, pos.x + 50, pos.y + 50],
+                    stroke: 'green',
+                    strokeWidth: 2,
+                };
+                break;
+            case 'text':
+                newShape = {
+                    id: `Text-${shapes.length + 1}`,
+                    type: 'Text',
+                    x: pos.x,
+                    y: pos.y,
+                    text: 'テキスト',
+                    fontSize: 20,
+                    fill: 'black',
+                };
+                break;
+            default:
+                return;
+        }
+        setShapes([...shapes, newShape]);
+    };
+    
         // 図形のマウスドラッグ終了時に、図形の位置を更新
         const handleDragEnd = (e: Konva.KonvaEventObject<DragEvent>, id: string) => {
             const newShapes = shapes.map((shape) => {
@@ -249,6 +314,7 @@ const Doc: React.FC = () => {
             });
             setShapes(newShapes);
         };
+
 
         
         return (
@@ -336,7 +402,7 @@ const Doc: React.FC = () => {
                                                     height={shape.height}
                                                     fill={shape.fill}
                                                     draggable
-                                                    onClick={() => setSelectedShapeId(shape.id)}
+                                                    onClick={() => handleShapeClick(shape.id, shape.type, shape.text || '')}
                                                     onDragEnd={(e) => handleDragEnd(e, shape.id)}
                                                     onTransformEnd={(e) => handleTransformEnd(e, shape.id)}
                                                     rotation={shape.rotation}
@@ -359,7 +425,7 @@ const Doc: React.FC = () => {
                                                     radius={shape.radius}
                                                     fill={shape.fill}
                                                     draggable
-                                                    onClick={() => setSelectedShapeId(shape.id)}
+                                                    onClick={() => handleShapeClick(shape.id, shape.type, shape.text || '')}
                                                     onDragEnd={(e) => handleDragEnd(e, shape.id)}
                                                     onTransformEnd={(e) => handleTransformEnd(e, shape.id)}
                                                     rotation={shape.rotation}
@@ -381,7 +447,30 @@ const Doc: React.FC = () => {
                                                     stroke={shape.stroke}
                                                     strokeWidth={shape.strokeWidth}
                                                     draggable
-                                                    onClick={() => setSelectedShapeId(shape.id)}
+                                                    onClick={() => handleShapeClick(shape.id, shape.type, shape.text || '')}
+                                                    onDragEnd={(e) => handleDragEnd(e, shape.id)}
+                                                    onTransformEnd={(e) => handleTransformEnd(e, shape.id)}
+                                                    ref={(node) => {
+                                                        if (selectedShapeId === shape.id && node instanceof Konva.Node) {
+                                                            const tr = new Konva.Transformer();
+                                                            node.getLayer()?.add(tr);
+                                                            tr.attachTo(node);
+                                                            node.getLayer()?.batchDraw();
+                                                        }
+                                                    }}
+                                                />
+                                            );
+                                        case 'Text':
+                                            return (
+                                                <Text
+                                                    key={shape.id}
+                                                    x={shape.x}
+                                                    y={shape.y}
+                                                    text={editingTextId === shape.id ? editingText : shape.text}
+                                                    fontSize={shape.fontSize}
+                                                    fill={shape.fill}
+                                                    draggable
+                                                    onClick={() => handleShapeClick(shape.id, shape.type, shape.text || '')}
                                                     onDragEnd={(e) => handleDragEnd(e, shape.id)}
                                                     onTransformEnd={(e) => handleTransformEnd(e, shape.id)}
                                                     ref={(node) => {
@@ -400,6 +489,24 @@ const Doc: React.FC = () => {
                                 })}
                             </Layer>
                         </Stage>
+                        {editingTextId && (
+                            <input
+                                type="text"
+                                value={editingText}
+                                onChange={handleTextChange}
+                                onKeyDown={handleTextSubmit}
+                                style={{
+                                    position: 'absolute',
+                                    top: `${shapes.find(shape => shape.id === editingTextId)?.y || 0}px`,
+                                    left: `${shapes.find(shape => shape.id === editingTextId)?.x || 0}px`,
+                                    transform: 'translate(0%,0%)',
+                                    fontSize: '20px',
+                                    zIndex: 10,
+                                    backgroundColor: 'white', // 背景色を設定して見やすくする
+                                    border: '1px solid black', // 枠線を設定して見やすくする
+                                }}
+                            />
+                        )}
                     </div>
                 </div>
             </div>
