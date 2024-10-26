@@ -18,7 +18,9 @@ import {
 } from 'lucide-react';
 import styles from "./style.module.scss";
 import { Label } from "@radix-ui/react-label";
+import Drawer from '@mui/material/Drawer';
 import Konva from "konva";
+import Docimage from "../Docimage"; // Ensure that Docimage is a valid React component
 
 // ドキュメントデータの型定義。初回作成時には空のデータを格納。
 interface Shape {
@@ -58,6 +60,7 @@ const Doc: React.FC = () => {
     const [selectedShapeId, setSelectedShapeId] = useState<string | null>(null);
     const [editingTextId, setEditingTextId] = useState<string | null>(null);
     const [editingText, setEditingText] = useState<string>('');
+    const [drawerOpen, setDrawerOpen] = useState(false);
 
     // userデータを取得 
     const [userData, setUserData] = useState({ id: '', username: '' });
@@ -147,6 +150,8 @@ const Doc: React.FC = () => {
         }
     };
 
+
+
     // 画面サイズの変更を検知してキャンバスのサイズを更新
     useEffect(() => {
         const updateSize = () => {
@@ -157,6 +162,11 @@ const Doc: React.FC = () => {
         return () => window.removeEventListener('resize', updateSize);
     }, []);
 
+    // drawerのでイラスト挿入画面を表示
+    const handleImageIconClick = () => {
+        setDrawerOpen(true);
+    };
+
     const tools = [
         { name: 'square', icon: SquareIcon, tooltip: '四角' },
         { name: 'circle', icon: CircleIcon, tooltip: '丸' },
@@ -164,7 +174,7 @@ const Doc: React.FC = () => {
         { name: 'arrow', icon: ArrowRightIcon, tooltip: '矢印' },
         { name: 'text', icon: TypeIcon, tooltip: 'テキストボックス' },
         { name: 'panel', icon: LayoutPanelLeftIcon, tooltip: '結合' },
-        { name: 'image', icon: ImageIcon, tooltip: 'イラスト挿入' },
+        { name: 'image', icon: ImageIcon, tooltip: 'イラスト挿入', onClick: handleImageIconClick },
         { name: 'color', icon: Palette, tooltip: 'colerパレット' },
         { name: 'eraser', icon: EraserIcon, tooltip: '削除' },
     ];
@@ -174,6 +184,8 @@ const Doc: React.FC = () => {
         setSelectedTool(toolName);
         if (toolName === 'eraser') {
             setSelectedShapeId(null);
+        } else if (toolName === 'image') {
+            handleImageIconClick();
         }
     };
 
@@ -317,8 +329,13 @@ const Doc: React.FC = () => {
 
 
         
-        return (
-            <div className={styles.container}>
+    return (
+        <div className={styles.container}>
+            <Drawer anchor="right" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+                <div style={{ width: 500 }}>
+                    <Docimage />
+                </div>
+            </Drawer>
                 <div className={styles.toolbar}>
                     <div className={styles.toolButtons}>
                         {tools.map((tool) => (
@@ -331,7 +348,7 @@ const Doc: React.FC = () => {
                                 <tool.icon className={styles.icon} />
                             </button>
                         ))}
-                    </div>
+                </div>
                     <div className={styles.actionButtons}>
                         <Link className={styles.info} href={`/user`}>My Pageへ</Link>
                         <button onClick={handleSave} className={styles.actionButton} title="保存">
