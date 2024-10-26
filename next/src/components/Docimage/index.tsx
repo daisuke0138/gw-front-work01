@@ -13,7 +13,7 @@ const Docimage: React.FC = () => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     // const [kinds, setkinds] = useState<string>('');
     const [kinds, setkinds] = useState<string>('');
-    const [searchTerm, setSearchTerm] = useState<string>('');
+    // const [searchTerm, setSearchTerm] = useState<string>('');
     const [preview, setPreview] = useState<string | null>(null);
     const [imageName, setimageName] = useState('');
     const [itemData, setItemData] = useState<Array<{
